@@ -1,0 +1,28 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-wow
+  namespace: prod
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: www.wow-pres-insa-isitr.com
+      http:
+        paths:
+          - path: /eds(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: eds
+                port:
+                  number: 80
+          - path: /edn(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: edn
+                port:
+                  number: 80
