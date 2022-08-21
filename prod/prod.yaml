@@ -20,7 +20,7 @@ spec:
         app: eds
     spec:
       containers:
-      - image: yumyum160/eds:latest
+      - image: yumyum160/edn:latest
         name: eds
         ports:
         - containerPort: 80
