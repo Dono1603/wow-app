@@ -65,8 +65,8 @@ jobs:
     # Commits the change
     - name: Commit files
       run: |
-        git config --local user.email $USER_MAIL
-        git config --local user.name $USER_NAME
+        git config --local user.email "$USER_MAIL"
+        git config --local user.name "$USER_NAME"
         git status
         git add ./k8s_config
         git commit -m "Updated the version of the Docker image"
