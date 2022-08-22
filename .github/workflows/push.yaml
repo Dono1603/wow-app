@@ -60,13 +60,14 @@ jobs:
 
     # Updates the image version in the deployment manifest
     - name: Update the version
-      run: sed -i "19s/\(simple-app:\).*/\1${GITHUB_SHA::7}/" ./k8s_config/deployment.yaml
+      run: |
+        sed -i "19s/\(simple-app:\).*/\1${GITHUB_SHA::7}/" ./k8s_config/deployment.yaml
 
     # Commits the change
     - name: Commit files
       run: |
-        git config --local user.email "$USER_MAIL"
-        git config --local user.name "$USER_NAME"
+        git config --local user.email "donovan.dupuis@gmail.com"
+        git config --local user.name "$Dono1603"
         git status
         git add ./k8s_config
         git commit -m "Updated the version of the Docker image"
