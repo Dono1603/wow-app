@@ -1,0 +1,75 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: prod
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eds
+  namespace: prod
+spec:
+  selector:
+    matchLabels:
+      app: eds
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: eds
+    spec:
+      containers:
+      - image: yumyum160/edn:latest
+        name: eds
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: eds
+  namespace: prod
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+  type: NodePort
+  selector:
+    app: eds
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: edn
+  namespace: prod
+spec:
+  selector:
+    matchLabels:
+      app: edn
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: edn
+    spec:
+      containers:
+      - image: yumyum160/edn:latest
+        name: edn
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: edn
+  namespace: prod
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+  type: NodePort
+  selector:
+    app: edn
