@@ -59,3 +59,10 @@ jobs:
         git status
         git add ./k8s_config/deployment.yaml
         git commit -m "Updated the version of the Docker image"
+        -
+    # Pushes the updated file to the repo
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.MY_GITHUB_TOKEN }}
+        force: true
