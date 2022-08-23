@@ -50,7 +50,7 @@ jobs:
 
     # Updates the image version in the deployment manifest
     - name: Update the version
-      run: sed -i "19s/\(simple-app:\).*/\1${GITHUB_SHA::7}/" ./k8s_config/deployment.yaml
+      run: touch chocolatine
 
     - name: cat document
       run: cat ./k8s_config/deployment.yaml
