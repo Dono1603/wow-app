@@ -45,8 +45,11 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: cat document
+    - name: sed document
       run: sed -i "19s/\(edn:\).*/\1${GITHUB_SHA::7}/" ./k8s_config/deployment.yaml
+
+    - name: cat document
+      run: cat ./k8s_config/deployment.yaml
 
     # Updates the image version in the deployment manifest
     - name: Commit files
