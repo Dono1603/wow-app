@@ -51,18 +51,15 @@ jobs:
     - name: cat document
       run: cat ./k8s_config/deployment.yaml
 
-    # Updates the image version in the deployment manifest
-    - name: Commit files
-      run: |
-        git config --global user.email "donovan.dupuis@gmail.com"
-        git config --global user.name "Dono1603"
-        git status
-        git add -a
-        git commit -m "Updated the version of the Docker image"
-        -
-    # Pushes the updated file to the repo
-    - name: Push changes
-      uses: ad-m/github-push-action@master
+    - name: push change
+      uses: dmnemec/copy_file_to_another_repo_action@main
+      env:
+        API_TOKEN_GITHUB: ${{ secrets.MY_GITHUB_TOKEN }}
       with:
-        github_token: ${{ secrets.MY_GITHUB_TOKEN }}
-        force: true
+        source_file: .k8s/deployment.yaml
+        destination_repo: Dono1603/wow-app
+        destination_branch: main
+        destination_folder: k8s_config
+        user_email: donovag.dupuis@ŋmail.com
+        user_name: Dono1603
+        commit_message: update image version ${{ steps.get_version.outputs.VERSION }} in yml file
