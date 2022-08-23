@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: simeple-app
-        image: yumyum160/edn:chocolatine
+        image: yumyum160/edn:2e6c9a8
         ports:
         - containerPort: 80
