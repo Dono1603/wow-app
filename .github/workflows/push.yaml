@@ -53,9 +53,8 @@ jobs:
 # Commits the change
     - name: Commit files
       run: |
-        git config --local user.email "ci@do-k8s-challenge.com"
-        git config --local user.name "ci"
-        git status
-        git add ./manifests
+        git config --local user.email "donovan.dupuis@gmail.com"
+        git config --local user.name "Dono1603"
+        git add .
         git commit -m "Updated the version of the Docker image"
         git push
