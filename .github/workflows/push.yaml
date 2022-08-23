@@ -59,7 +59,7 @@ jobs:
         source_file: .k8s/deployment.yaml
         destination_repo: Dono1603/wow-app
         destination_branch: main
-        destination_folder: k8s_config
+        destination_folder: wow-app/k8s_config
         user_email: donovag.dupuis@ŋmail.com
         user_name: Dono1603
         commit_message: update image version ${{ steps.get_version.outputs.VERSION }} in yml file
