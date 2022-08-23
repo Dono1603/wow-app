@@ -12,58 +12,54 @@ on:
     branches:
     - main
     types: [closed]
-
+env:
+  IMAGE_NAME: yumyum160/edn
 
 jobs:
-  create-and-push-image:
+
+  buildAndPush:
+    name: 'Build and Push a Docker Image'
     runs-on: ubuntu-latest
+
+    # Uses the Bash shell regardless of the GitHub Actions runner
+    defaults:
+      run:
+        shell: bash
+
     steps:
-      - name: get version
-        id: get-version
-        run: |
-          echo ::set-output name=VERSION::$(echo $GITHUB_REF | cut -d / -f 3)
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
-      - name: checkout
-        uses: actions/checkout@v2
+    - name: Docker build
+      run: docker build . --file Dockerfile --tag $IMAGE_NAME:${GITHUB_SHA::7}
 
-      - name: Login to the registry
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+    - name: Login to the registry
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: create image
-        run: |
-          docker build -t edn:${{ steps.get-version.outputs.VERSION }} .
+    - name: Docker push
+      run: docker push $IMAGE_NAME:${GITHUB_SHA::7}
 
-      - name: get-images-id
-        id: image-id
-        run: |
-          echo '::set-output name=IMAGE_ID::$(docker images -q test-app:${{ steps.get-version.outputs.VERSION }})'
+    - name: install yq
+      uses: mikefarah/yq@v4.15.1
 
-      - name: upload image to registry
-        run: |
-          docker tag ${{ steps.image-id.outputs.IMAGE_ID }} yumyum160/edn:${{ steps.get-version.outputs.VERSION }}
-          docker push yumyum160/edn:${{ steps.get-version.outputs.VERSION }}
+    - name: update infra yaml file
+      run: |
+        cd k8s_config
+        yq e -i '.spec.template.spec.containers[0].image="yumyum160/edn:${{ GITHUB_SHA::7 }}"' deployment.yaml
+        cat deployment.yml
 
-      - name: install yq
-        uses: mikefarah/yq@v4.15.1
-
-      - name: update infra yaml file
-        run: |
-          cd k8s_config
-          yq e -i '.spec.template.spec.containers[0].image="yumyum160/edn:${{ steps.get-version.outputs.VERSION }}"' deployment.yaml
-          cat deployment.yml
-
-      - name: push change
-        uses: dmnemec/copy_file_to_another_repo_action@main
-        env:
-          API_TOKEN_GITHUB: ${{ secrets.MY_GITHUB_TOKEN }}
-        with:
-          source_file: k8s_config/calc-deployment.yml
-          destination_repo: Dono1603/wow-app
-          destination_branch: main
-          destination_folder: k8s_config
-          user_email: donovan.dupuis@gmail.com
-          user_name: Dono1603
-          commit_message: update image version ${{ steps.get_version.outputs.VERSION }} in yml file
+    - name: push change
+      uses: dmnemec/copy_file_to_another_repo_action@main
+      env:
+        API_TOKEN_GITHUB: ${{ secrets.MY_GITHUB_TOKEN }}
+      with:
+        source_file: k8s_config/calc-deployment.yml
+        destination_repo: Dono1603/wow-app
+        destination_branch: main
+        destination_folder: k8s_config
+        user_email: donovan.dupuis@gmail.com
+        user_name: Dono1603
+        commit_message: update image version ${{ GITHUB_SHA::7 }} in yml file
