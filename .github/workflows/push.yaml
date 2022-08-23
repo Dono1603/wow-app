@@ -50,11 +50,7 @@ jobs:
 
     # Updates the image version in the deployment manifest
     - name: Update the version
-      run: touch chocolatine
-
-    - name: cat document
-      run: cat ./k8s_config/deployment.yaml
-
+      run: touch ./k8s_config/chocolatine.yaml
     # Commits the change
     - name: Commit files
       run: |
