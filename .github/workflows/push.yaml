@@ -65,5 +65,5 @@ jobs:
           git config --global user.email "donovan.dupuis@gmail.com"
           git config --global user.name "Dono1603"
           git status
-          git add ./manifests
+          git add ./k8s_config
           git commit -m "Updated the version of the Docker image"
