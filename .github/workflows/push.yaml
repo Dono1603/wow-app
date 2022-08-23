@@ -59,15 +59,11 @@ jobs:
       - name: Update the version
         run: sed -i "19s/\(simple-app:\).*/\1${GITHUB_SHA::7}/" ./k8s_config/deployment.yaml
 
-      - name: push change
-        uses: dmnemec/copy_file_to_another_repo_action@main
-        env:
-          API_TOKEN_GITHUB: ${{ secrets.MY_GITHUB_TOKEN }}
-        with:
-          source_file: k8s_config/calc-deployment.yml
-          destination_repo: Dono1603/wow-app
-          destination_branch: main
-          destination_folder: k8s_config
-          user_email: donovan.dupuis@gmail.com
-          user_name: Dono1603
-          commit_message: update image version in yml file
+      # Commits the change
+      - name: Commit files
+        run: |
+          git config --global user.email "donovan.dupuis@gmail.com"
+          git config --global user.name "Dono1603"
+          git status
+          git add ./manifests
+          git commit -m "Updated the version of the Docker image"
