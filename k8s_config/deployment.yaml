@@ -1,58 +1,29 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: simple-app-deployment
+  name: edn
   labels:
-    app: simple-app
+    app: edn
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: simeple-app
+      app: edn
   template:
     metadata:
       labels:
-        app: simeple-app
+        app: edn
     spec:
       containers:
-      - name: simeple-app
+      - name: edn
         image: yumyum160/edn:ebfe8f8
-        ports:
-        - containerPort: 80
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: prod
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: eds
-  namespace: prod
-spec:
-  selector:
-    matchLabels:
-      app: eds
-  replicas: 1
-  template:
-    metadata:
-      labels:
-        app: eds
-    spec:
-      containers:
-      - image: yumyum160/eds:latest
-        name: eds
         ports:
         - containerPort: 80
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: eds
-  namespace: prod
-  annotations:
-    external-dns.alpha.kubernetes.io/hostname: www.wow-pres-insa-isitr.com
+  name: edn
 spec:
   ports:
   - port: 80
@@ -60,13 +31,12 @@ spec:
     protocol: TCP
   type: ClusterIP
   selector:
-    app: eds
+    app: edn
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: ingress-wow
-  namespace: prod
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /$2
 spec:
@@ -75,10 +45,10 @@ spec:
     - host: www.wow-pres-insa-isitr.com
       http:
         paths:
-          - path: /eds(/|$)(.*)
+          - path: /edn(/|$)(.*)
             pathType: Prefix
             backend:
               service:
-                name: eds
+                name: edn
                 port:
                   number: 80
