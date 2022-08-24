@@ -46,7 +46,7 @@ jobs:
       uses: actions/checkout@v2
 
     - name: sed document
-      run: sed -i "19s/\(edn:\).*/\1${GITHUB_SHA::7}/" ./k8s_config/deployment.yaml
+      run: sed -i "23s/\(edn:\).*/\1${GITHUB_SHA::7}/" ./k8s_config/deployment.yaml
 
     - name: cat document
       run: cat ./k8s_config/deployment.yaml
