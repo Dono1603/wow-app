@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: edn
-        image: yumyum160/edn:de74aa4
+        image: yumyum160/edn:45a48d5
         ports:
         - containerPort: 80
 ---
